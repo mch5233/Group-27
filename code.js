@@ -1,4 +1,4 @@
-const urlBase = 'cop4331iscool.xyz';
+const urlBase = 'https://cop4331iscool.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
@@ -7,8 +7,7 @@ let lastName = "";
 const ids = [];
 
 //Leinecker
-function doLogin()
-function showTable() {
+function doLogin(){
         userId = 0;
         firstName = "";
         lastName = "";
@@ -20,14 +19,14 @@ function showTable() {
 
         //direct by  valid or invalid
         if (!validLoginForm(login, password)) {
-                document.getElementById("loginResult").innerHTML = "invalid username or password";
+                document.getElementById("loginResult").innerHTML = "invalid user                                                                             name or password";
                 return;
         }
         document.getElementById("loginResult").innerHTML = "";
 
         let tmp = {login: login, password: hash};
 
-        let jsonPayload = JSON.stringify( tmp );
+        let jsonPayload = JSON.stringify(tmp);
 
         let url = urlBase + '/Login.' + extension;
 
@@ -45,7 +44,7 @@ function showTable() {
 
                                 if(userId < 1)
                                 {
-                                        document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
+                                        document.getElementById("loginResult").i                                                                             nnerHTML = "User/Password combination incorrect";
                                         return;
                                 }
 
@@ -77,12 +76,12 @@ function doSignup()
 
         if (!validSignUpForm(firstName, lastName, username, password))
         {
-                document.getElementById("signupResult").innerHTML = "invalid signup";
+                document.getElementById("signupResult").innerHTML = "invalid sig                                                                             nup";
                 return;
         }
 
         var hash = md5(password);
-        document.getElementById("sigbupResult").innerHTML = "";
+        document.getElementById("signupResult").innerHTML = "";
 
         let tmp =
         {
@@ -92,7 +91,7 @@ function doSignup()
 
         let jsonPayload = JSON.stringify(tmp);
 
-        let url = urlBase + '/SignUp.' + extension;
+        let url = urlBase + '/Register.' + extension;
 
         let xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
@@ -105,25 +104,26 @@ function doSignup()
                         if (this.readyState != 4){ return; }
                         if (this.status == 409)
                         {
-                                document.getElementById("signupResult").innerHTML = "User already exists";
+                                document.getElementById("signupResult").innerHTM                                                                             L = "User already exists";
                                 return;
                         }
                         if (this.status == 200)
                         {
                                 let jsonObject = JSON.parse(xhr.responseText);
                                 userId = jsonObject.id;
-                                document.getElementById("signupResult").innerHTML = "User added!";
+                                document.getElementById("signupResult").innerHTM                                                                             L = "User added!";
                                 firstName = jsonObject.firstName;
                                 lastName = jsonObject.lastName;
-                                saveCookie;
+                                saveCookie();
                         }
                 };
 
-                xhr.send(jasonPayload);
-                catch(err) 
-                {
-                        document.getElementById("signupResult").innerHTML = err.message;
-		}
+                xhr.send(jsonPayload);
+        }       catch (err) {
+                        document.getElementById("signupResult").innerHTML = err.                                                                             message;
+                }
+}
+
 
 //Leinecker
 //save new info
@@ -132,7 +132,7 @@ function saveCookie()
         let minutes = 20;
         let date = new Date();
         date.setTime(date.getTime()+(minutes*60*1000));
-        document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+        document.cookie = "firstName=" + firstName + ",lastName=" + lastName + "                                                                             ,userId=" + userId + ";expires=" + date.toGMTString();
 }
 
 //Leinecker
@@ -165,7 +165,7 @@ function readCookie()
         }
         else
         {
-                document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+                document.getElementById("userName").innerHTML = "Welcome " + fir                                                                             stName + " " + lastName;
         }
 }
 
@@ -175,7 +175,7 @@ function doLogout()
         userId = 0;
         firstName = "";
         lastName = "";
-        document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"                                                                             ;
         window.location.href = "index.html";
 }
 
@@ -194,7 +194,7 @@ function showTable() {
 }
 
 //Leincker add function
-function addColor()
+function addContact()
 {
         let firstName = document.getElementById("contactTextFirst").value;
         let lastName = document.getElementById("contactTextLast").value;
@@ -209,14 +209,16 @@ function addColor()
 
         let tmp =
         {
-                firstName: firstName, lastName: lastName,
-                phonenumber: phonenumber, emailaddress: emailaddress,
+                firstName: firstName,
+                lastName: lastName,
+                phonenumber: phonenumber,
+                emailaddress: emailaddress,
                 userId: userId
         };
 
         let jsonPayload = JSON.stringify(tmp);
 
-        let url = urlBase + '/AddContacts.' + extension;
+        let url = urlBase + '/AddContact.' + extension;
 
         let xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
@@ -238,7 +240,8 @@ function addColor()
         catch(err)
         {
                 console.log(err.message);
-                document.getElementById("colorAddResult").innerHTML = err.message;
+                //ERROR
+                document.getElementById("contactAddResult").innerHTML = err.mess                                                                             age;
         }
 
 }
@@ -269,22 +272,22 @@ function loadContacts()
                                 }
 
                                 let text = "<table border='1'>"
-                                for (let i = 0; i < jsonObject.results.length; i++)
+                                for (let i = 0; i < jsonObject.results.length; i                                                                             ++)
                                 {
                                         ids[i] = jsonObject.results[i].ID
                                         text += "<tr id='row" + i + "'>"
-                                        text += "<td id='first_Name" + i + "'><span>" + jsonObject.results[i].FirstName + "</span></td>";
-                                        text += "<td id='last_Name" + i + "'><span>" + jsonObject.results[i].LastName + "</span></td>";
-                                        text += "<td id='email" + i + "'><span>" + jsonObject.results[i].EmailAddress + "</span></td>";
-                                        text += "<td id='phone" + i + "'><span>" + jsonObject.results[i].PhoneNumber + "</span></td>";
+                                        text += "<td id='first_Name" + i + "'><s                                                                             pan>" + jsonObject.results[i].FirstName + "</span></td>";
+                                        text += "<td id='last_Name" + i + "'><sp                                                                             an>" + jsonObject.results[i].LastName + "</span></td>";
+                                        text += "<td id='email" + i + "'><span>"                                                                              + jsonObject.results[i].EmailAddress + "</span></td>";
+                                        text += "<td id='phone" + i + "'><span>"                                                                              + jsonObject.results[i].PhoneNumber + "</span></td>";
                                         text += "<td>" +
-                        "<button type='button' id='edit_button" + i + "' class='w3-button w3-circle w3-lime' onclick='edit_row(" + i + ")'>" + "<span class='glyphicon glyphicon-edit'></span>" + "</button>" +
-                        "<button type='button' id='save_button" + i + "' value='Save' class='w3-button w3-circle w3-lime' onclick='save_row(" + i + ")' style='display: none'>" + "<span class='glyphicon glyphicon-saved'></span>" + "</button>" +
-                        "<button type='button' onclick='delete_row(" + i + ")' class='w3-button w3-circle w3-amber'>" + "<span class='glyphicon glyphicon-trash'></span> " + "</button>" + "</td>";
+                        "<button type='button' id='edit_button" + i + "' class='                                                                             w3-button w3-circle w3-lime' onclick='edit_row(" + i + ")'>" + "<span class='gly                                                                             phicon glyphicon-edit'></span>" + "</button>" +
+                        "<button type='button' id='save_button" + i + "' value='                                                                             Save' class='w3-button w3-circle w3-lime' onclick='save_row(" + i + ")' style='d                                                                             isplay: none'>" + "<span class='glyphicon glyphicon-saved'></span>" + "</button>                                                                             " +
+                        "<button type='button' onclick='delete_row(" + i + ")' c                                                                             lass='w3-button w3-circle w3-amber'>" + "<span class='glyphicon glyphicon-trash'                                                                             ></span> " + "</button>" + "</td>";
                                         text += "<tr/>"
                                 }
                                 text += "</table>"
-                                document.getElementById("tbody").innerHTML = text;
+                                document.getElementById("tbody").innerHTML = tex                                                                             t;
                         }
                 };
                 xhr.send(jsonPayload);
@@ -308,10 +311,10 @@ function edit_row(id) {
     var email_data = email.innerText;
     var phone_data = phone.innerText;
 
-    firstNameI.innerHTML = "<input type='text' id='namef_text" + id + "' value='" + namef_data + "'>";
-    lastNameI.innerHTML = "<input type='text' id='namel_text" + id + "' value='" + namel_data + "'>";
-    email.innerHTML = "<input type='text' id='email_text" + id + "' value='" + email_data + "'>";
-    phone.innerHTML = "<input type='text' id='phone_text" + id + "' value='" + phone_data + "'>"
+    firstNameI.innerHTML = "<input type='text' id='namef_text" + id + "' value='                                                                             " + namef_data + "'>";
+    lastNameI.innerHTML = "<input type='text' id='namel_text" + id + "' value='"                                                                              + namel_data + "'>";
+    email.innerHTML = "<input type='text' id='email_text" + id + "' value='" + e                                                                             mail_data + "'>";
+    phone.innerHTML = "<input type='text' id='phone_text" + id + "' value='" + p                                                                             hone_data + "'>"
 }
 
 //save changes
@@ -364,7 +367,7 @@ function delete_row(no) {
     var namel_val = document.getElementById("last_Name" + no).innerText;
     nameOne = namef_val.substring(0, namef_val.length);
     nameTwo = namel_val.substring(0, namel_val.length);
-    let check = confirm('Confirm deletion of contact: ' + nameOne + ' ' + nameTwo);
+    let check = confirm('Confirm deletion of contact: ' + nameOne + ' ' + nameTw                                                                             o);
     if (check === true) {
         document.getElementById("row" + no + "").outerHTML = "";
         let tmp = {
@@ -398,7 +401,7 @@ function delete_row(no) {
 }
 
 //Leincker search function
-function searchColor()
+function searchContacts()
 {
         const content = document.getElementById("searchText");
         const selections = content.value.toUpperCase().split(' ');
@@ -414,17 +417,17 @@ function searchColor()
 
                 if (td_fn && td_ln)
                 {
-                        const txtValue_fn = td_fn.textContent || td_fn.innerText;
-                        const txtValue_ln = td_ln.textContent || td_ln.innerText;
+                        const txtValue_fn = td_fn.textContent || td_fn.innerText                                                                             ;
+                        const txtValue_ln = td_ln.textContent || td_ln.innerText                                                                             ;
                         tr[i].style.display = "none";
 
                         for (selection of selections)
                         {
-                                if (txtValue_fn.toUpperCase().indexOf(selection) > -1)
+                                if (txtValue_fn.toUpperCase().indexOf(selection)                                                                              > -1)
                                 {
                                         tr[i].style.display = "";
                                 }
-                                if (txtValue_ln.toUpperCase().indexOf(selection) > -1)
+                                if (txtValue_ln.toUpperCase().indexOf(selection)                                                                              > -1)
                                 {
                                         tr[i].style.display = "";
                                 }
@@ -581,7 +584,7 @@ function validAddContact(firstName, lastName, phone, email)
                 {console.log("PHONE IS BLANK");}
         else
         {
-                var regex = /^[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}$/;
+                var regex = /^[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}$/                                                                             ;
 
                 if (regex.test(phone) == false)
                         {console.log("PHONE IS NOT VALID");}
@@ -597,7 +600,7 @@ function validAddContact(firstName, lastName, phone, email)
                 {console.log("EMAIL IS BLANK");}
         else
         {
-                var regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                var regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]                                                                             {2,5})$/;
 
                 if (regex.test(email) == false)
                         {console.log("EMAIL IS NOT VALID");}
