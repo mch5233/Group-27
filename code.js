@@ -211,8 +211,8 @@ function addContact()
         {
                 firstName: firstName,
                 lastName: lastName,
-                phonenumber: phonenumber,
-                emailaddress: emailaddress,
+                phoneNumber: phonenumber,
+                emailAddress: emailaddress,
                 userId: userId
         };
 
