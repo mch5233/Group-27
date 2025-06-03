@@ -1,4 +1,4 @@
-const urlBase = 'https://cop4331iscool.xyz/LAMPAPI';
+  const urlBase = 'https://cop4331iscool.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
@@ -40,7 +40,10 @@ function doLogin(){
                         if (this.readyState == 4 && this.status == 200)
                         {
                                 let jsonObject = JSON.parse(xhr.responseText );
-                                userId = jsonObject.id;
+                                console.log("Login response:", jsonObject);
+                                //userId = parseInt(jsonObject.ID);
+                                //userId = jsonObject.id;
+                                userId = parseInt(jsonObject.ID);
 
                                 if(userId < 1)
                                 {
@@ -110,7 +113,10 @@ function doSignup()
                         if (this.status == 200)
                         {
                                 let jsonObject = JSON.parse(xhr.responseText);
-                                userId = jsonObject.id;
+
+                                //userId = parseInt(jsonObject.ID);
+                                //userId = jsonObject.id;
+                                userId = parseInt(jsonObject.results[0].ID);
                                 document.getElementById("signupResult").innerHTML = "User added!";
                                 firstName = jsonObject.firstName;
                                 lastName = jsonObject.lastName;
@@ -127,13 +133,15 @@ function doSignup()
 
 //Leinecker
 //save new info
-function saveCookie()
+/*function saveCookie()
 {
         let minutes = 20;
         let date = new Date();
         date.setTime(date.getTime()+(minutes*60*1000));
         document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+        console.log("Saving cookie with userId", userId);
 }
+
 
 //Leinecker
 function readCookie()
@@ -145,6 +153,9 @@ function readCookie()
         {
                 let thisOne = splits[i].trim();
                 let tokens = thisOne.split("=");
+
+                if(tokens.length < 2) continue;
+
                 if(tokens[0] == "firstName" )
                 {
                         firstName = tokens[1];
@@ -159,15 +170,81 @@ function readCookie()
                 }
         }
 
+        console.log("Parsed userId:", userId);
         if( userId < 0 )
         {
                 window.location.href = "index.html";
         }
         else
         {
-                document.getElementById("userName").innerHTML = "Welcome " + firstName + " " + lastName;
+                 document.getElementById("userName").innerHTML = "Welcome, " + firstName + " " + lastName + "!";
         }
+}*/
+
+// Function to save user session data into a cookie
+function saveCookie() {
+    let minutes = 20;
+    let date = new Date();
+    date.setTime(date.getTime() + (minutes * 60 * 1000)); // Set cookie expiry time
+
+    // Create a session object with user data and a timestamp
+    let sessionData = {
+        firstName: firstName,
+        lastName: lastName,
+        userId: userId,
+        timestamp: date.getTime() // Add a timestamp for session validation
+    };
+
+    // Base64 encode the JSON string to safely store complex data in a cookie
+    let encodedData = btoa(JSON.stringify(sessionData));
+
+    // Set a single cookie named 'userSession' with the encoded data
+    document.cookie = `userSession=${encodedData};expires=${date.toGMTString()};path=/`;
+    console.log("Saving cookie with userId:", userId);
 }
+
+// Function to read user session data from the cookie
+function readCookie() {
+    userId = -1; // Initialize userId to an invalid value
+    let cookies = document.cookie.split(';'); // Split all cookies by semicolon
+
+    // Iterate through each cookie
+    for (let cookie of cookies) {
+        let [name, value] = cookie.trim().split('='); // Split cookie into name and value
+
+        // Check if the current cookie is 'userSession'
+        if (name === 'userSession') {
+            try {
+                // Decode the base64 string and parse the JSON to get session data
+                let sessionData = JSON.parse(atob(value));
+
+                // Validate if the session data exists and is still valid based on timestamp
+                if (sessionData && sessionData.timestamp > new Date().getTime()) {
+                    firstName = sessionData.firstName;
+                    lastName = sessionData.lastName;
+                    userId = sessionData.userId;
+                }
+            } catch (e) {
+                console.error("Error parsing session cookie:", e); // Log any parsing errors
+            }
+            break; // Exit loop once userSession cookie is found
+        }
+    }
+
+    console.log("Parsed userId:", userId);
+    if (userId < 0) {
+        // If userId is invalid, redirect to the login page
+        window.location.href = "index.html";
+    } else {
+        // If userId is valid, display the welcome message
+        let userNameElement = document.getElementById("userName");
+        if (userNameElement) {
+            userNameElement.innerHTML = "Welcome, " + firstName + " " + lastName + "!";
+        }
+    }
+}
+
+
 
 //Leinecker
 function doLogout()
@@ -229,7 +306,7 @@ function addContact()
                 {
                         if (this.readyState == 4 && this.status == 200)
                         {
-                                console.log("contact added");
+                                console.log("Contact Added");
                                 document.getElementById("addMe").reset();
                                 loadContacts();
                                 showTable();
@@ -249,11 +326,14 @@ function addContact()
 //load existing and edited contacts
 function loadContacts()
 {
-        let tmp = {search: "", userId: userId};
+        let tmp = {
+            search: "", 
+            userId: userId
+        };
 
-        let jsonPayLoad = JSON.stringify(tmp);
+        let jsonPayload = JSON.stringify(tmp);
 
-        let url = urlBase + '/SearchContacts.' + extension;
+        let url = urlBase + '/SearchContact.' + extension;
         let xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -278,12 +358,14 @@ function loadContacts()
                                         text += "<tr id='row" + i + "'>"
                                         text += "<td id='first_Name" + i + "'><span>" + jsonObject.results[i].FirstName + "</span></td>";
                                         text += "<td id='last_Name" + i + "'><span>" + jsonObject.results[i].LastName + "</span></td>";
-                                        text += "<td id='email" + i + "'><span>" + jsonObject.results[i].EmailAddress + "</span></td>";
-                                        text += "<td id='phone" + i + "'><span>" + jsonObject.results[i].PhoneNumber + "</span></td>";
+                                        //text += "<td id='email" + i + "'><span>" + jsonObject.results[i].EmailAddress + "</span></td>";
+                                        //text += "<td id='phone" + i + "'><span>" + jsonObject.results[i].PhoneNumber + "</span></td>";
+                                        text += "<td id='email" + i + "'><span>" + jsonObject.results[i].Email + "</span></td>";
+                                        text += "<td id='phone" + i + "'><span>" + jsonObject.results[i].Phone + "</span></td>";
                                         text += "<td>" +
-                        "<button type='button' id='edit_button" + i + "' class='w3-button w3-circle w3-lime' onclick='edit_row(" + i + ")'>" + "<span class='glyphicon glyphicon-edit'></span>" + "</button>" +
-                        "<button type='button' id='save_button" + i + "' value='Save' class='w3-button w3-circle w3-lime' onclick='save_row(" + i + ")' style='display: none'>" + "<span class='glyphicon glyphicon-saved'></span>" + "</button>                                                                             " +
-                        "<button type='button' onclick='delete_row(" + i + ")' class='w3-button w3-circle w3-amber'>" + "<span class='glyphicon glyphicon-trash'></span> " + "</button>" + "</td>";
+                        "<button type='button' id='edit_button" + i + "' class='w3-button w3-circle w3-lime' onclick='edit_row(" + i + ")'>" + "<span class='gly                                                                             phicon glyphicon-edit'></span>" + "</button>" +
+                        "<button type='button' id='save_button" + i + "' value='Save' class='w3-button w3-circle w3-lime' onclick='save_row(" + i + ")' style='d                                                                             isplay: none'>" + "<span class='glyphicon glyphicon-saved'></span>" + "</button>                                                                             " +
+                        "<button type='button' onclick='delete_row(" + i + ")' class='w3-button w3-circle w3-amber'>" + "<span class='glyphicon glyphicon-trash'                                                                             ></span> " + "</button>" + "</td>";
                                         text += "<tr/>"
                                 }
                                 text += "</table>"
@@ -343,7 +425,7 @@ function save_row(no) {
 
     let jsonPayload = JSON.stringify(tmp);
 
-    let url = urlBase + '/UpdateContacts.' + extension;
+    let url = urlBase + '/UpdateContact.' + extension;
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -378,7 +460,7 @@ function delete_row(no) {
 
         let jsonPayload = JSON.stringify(tmp);
 
-        let url = urlBase + '/DeleteContacts.' + extension;
+        let url = urlBase + '/DeleteContact.' + extension;
 
         let xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
